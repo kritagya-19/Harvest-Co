@@ -1,0 +1,6 @@
+{
+  "name": "Harvest & Co.",
+  "description": "A visually stunning and precise replication of the Harvest & Co. seasonal event landing hero page with interactive shop elements.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
