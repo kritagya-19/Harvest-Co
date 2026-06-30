@@ -86,15 +86,6 @@ export default function HeroSection({}: HeroSectionProps) {
             Shop Fresh Produce
           </a>
 
-          {/* Secondary Text Link with Arrow */}
-          <a 
-            id="browse-fresh-picks-btn"
-            href="#shop-categories"
-            className="group flex items-center justify-center w-full sm:w-auto gap-2 text-white font-semibold hover:text-[#EDE0D4] transition-colors duration-200 py-2 sm:py-4 cursor-pointer select-none text-sm sm:text-base drop-shadow-md"
-          >
-            <span>View Our Categories</span>
-            <ArrowRight className="h-4.5 w-4.5 group-hover:translate-x-1.5 transition-transform duration-200" />
-          </a>
         </motion.div>
 
         {/* Footer / Benefit line */}
