@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'motion/react';
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import CartDrawer from './components/CartDrawer';
 import PromoModal from './components/PromoModal';
 import SearchOverlay from './components/SearchOverlay';
 
@@ -18,6 +17,9 @@ import WhyChooseSection from './sections/home/WhyChooseSection';
 import CategoryPage from './pages/CategoryPage';
 import CheckoutPage from './pages/CheckoutPage';
 
+import ProductModal from './components/ProductModal';
+import { type Product } from './data/products';
+
 interface CartItem {
   id: string;
   name: string;
@@ -30,13 +32,13 @@ interface CartItem {
 
 export default function App() {
   // Interactive UI states
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [isPromoOpen, setIsPromoOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   // Navigate to a category page
   const navigateToCategory = (slug: string) => {
@@ -49,7 +51,6 @@ export default function App() {
   // Navigate to checkout
   const navigateToCheckout = () => {
     setIsCheckoutOpen(true);
-    setIsCartOpen(false);
     window.scrollTo({ top: 0 });
     window.history.pushState({ checkout: true }, '', '#checkout');
   };
@@ -75,26 +76,7 @@ export default function App() {
   }, []);
 
   // Cart state starting with reference items
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 'item-1',
-      name: 'Organic Alphonso Mangoes (1 Box)',
-      category: 'Fruits',
-      price: 599,
-      originalPrice: 999,
-      quantity: 1,
-      icon: '🥭'
-    },
-    {
-      id: 'item-2',
-      name: 'Premium Kashmiri Walnuts (500g)',
-      category: 'Nuts',
-      price: 400,
-      originalPrice: 649,
-      quantity: 1,
-      icon: '🌰'
-    }
-  ]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const totalCartQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -120,8 +102,7 @@ export default function App() {
     setCartItems(prev => {
       return prev.map(item => {
         if (item.id === id) {
-          const nextQty = item.quantity + delta;
-          return nextQty > 0 ? { ...item, quantity: nextQty } : item;
+          return { ...item, quantity: item.quantity + delta };
         }
         return item;
       }).filter(item => item.quantity > 0);
@@ -133,10 +114,7 @@ export default function App() {
   };
 
   const handleResetCart = () => {
-    setCartItems([
-      { id: 'item-1', name: 'Organic Alphonso Mangoes (1 Box)', category: 'Fruits', price: 599, originalPrice: 999, quantity: 1, icon: '🥭' },
-      { id: 'item-2', name: 'Premium Kashmiri Walnuts (500g)', category: 'Nuts', price: 400, originalPrice: 649, quantity: 1, icon: '🌰' }
-    ]);
+    setCartItems([]);
   };
 
   return (
@@ -146,15 +124,16 @@ export default function App() {
       <div className="absolute top-[20%] right-1/4 w-[600px] h-[600px] bg-emerald-950/5 rounded-full blur-[180px] pointer-events-none z-0"></div>
 
       {/* Navbar Header */}
-      <Navbar 
-        totalCartQuantity={totalCartQuantity}
-        onCartOpen={() => setIsCartOpen(true)}
-        onPromoOpen={() => setIsPromoOpen(true)}
-        onSearchOpen={() => setIsSearchOpen(true)}
-        isMobileMenuOpen={isMobileMenuOpen}
-        setIsMobileMenuOpen={setIsMobileMenuOpen}
-        isCategoryPage={!!activeCategory}
-      />
+      {!isCheckoutOpen && (
+        <Navbar 
+          totalCartQuantity={totalCartQuantity}
+          onCartOpen={navigateToCheckout}
+          onSearchOpen={() => setIsSearchOpen(true)}
+          isMobileMenuOpen={isMobileMenuOpen}
+          setIsMobileMenuOpen={setIsMobileMenuOpen}
+          isCategoryPage={!!activeCategory}
+        />
+      )}
 
       {/* Main Content (Home sections or Category page) */}
       <AnimatePresence mode="wait">
@@ -166,13 +145,14 @@ export default function App() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
           >
-            <HeroSection onPromoOpen={() => setIsPromoOpen(true)} />
+            <HeroSection />
             <CategorySection onNavigateToCategory={navigateToCategory} />
             <BestSellersSection 
               cartItems={cartItems} 
               onAddToCart={handleAddToCart} 
               onUpdateQuantity={updateQuantity}
               onNavigateToCategory={navigateToCategory}
+              onProductClick={setSelectedProduct}
             />
             <WhyChooseSection />
           </motion.div>
@@ -189,6 +169,7 @@ export default function App() {
               cartItems={cartItems}
               onAddToCart={handleAddToCart}
               onUpdateQuantity={updateQuantity}
+              onProductClick={setSelectedProduct}
               onBack={() => {
                 setActiveCategory(null);
                 window.history.back();
@@ -211,22 +192,20 @@ export default function App() {
               setIsCheckoutOpen(false);
               window.history.back();
             }}
+            onBrowseProducts={() => {
+              setIsCheckoutOpen(false);
+              setActiveCategory(null);
+              window.history.pushState(null, '', '/');
+              setTimeout(() => {
+                document.getElementById('shop-categories')?.scrollIntoView({ behavior: 'smooth' });
+              }, 100);
+            }}
             onOrderComplete={() => setCartItems([])}
           />
         )}
       </AnimatePresence>
 
       {/* Drawers / Overlays / Modals */}
-      <CartDrawer 
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        cartItems={cartItems}
-        onUpdateQuantity={updateQuantity}
-        onRemoveItem={removeItem}
-        onCheckout={navigateToCheckout}
-        onResetCart={handleResetCart}
-      />
-
       <PromoModal 
         isOpen={isPromoOpen}
         onClose={() => setIsPromoOpen(false)}
@@ -240,9 +219,17 @@ export default function App() {
         onClose={() => setIsSearchOpen(false)}
         cartItems={cartItems}
         onAddToCart={handleAddToCart}
-        shopProducts={shopProducts}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        onProductClick={setSelectedProduct}
+      />
+
+      <ProductModal
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        quantityInCart={selectedProduct ? (cartItems.find(item => item.id === selectedProduct.id)?.quantity || 0) : 0}
+        onAddToCart={handleAddToCart}
+        onUpdateQuantity={updateQuantity}
       />
     </div>
   );

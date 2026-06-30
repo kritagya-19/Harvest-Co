@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'motion/react';
 interface NavbarProps {
   totalCartQuantity: number;
   onCartOpen: () => void;
-  onPromoOpen: () => void;
   onSearchOpen: () => void;
   isMobileMenuOpen: boolean;
   setIsMobileMenuOpen: (open: boolean) => void;
@@ -15,7 +14,6 @@ interface NavbarProps {
 export default function Navbar({
   totalCartQuantity,
   onCartOpen,
-  onPromoOpen,
   onSearchOpen,
   isMobileMenuOpen,
   setIsMobileMenuOpen,
@@ -34,8 +32,7 @@ export default function Navbar({
   const navLinks = [
     { name: 'Home', href: '#' },
     { name: 'Shop', href: '#shop-categories' },
-    { name: 'Best Sellers', href: '#best-sellers-section' },
-    { name: 'About Us', href: '#why-choose-and-footer' }
+    { name: 'Best Sellers', href: '#best-sellers-section' }
   ];
 
   // Dynamic Class Computations
@@ -121,13 +118,13 @@ export default function Navbar({
           </button>
 
           {/* Shop Now Primary Button */}
-          <button 
+          <a 
             id="nav-shop-now-btn"
-            onClick={onPromoOpen}
+            href="#shop-categories"
             className="hidden md:inline-flex items-center justify-center bg-[#D45B0C] hover:bg-[#B84E0A] text-white text-xs lg:text-sm font-semibold px-4.5 py-2.5 rounded-lg tracking-wide transition-all active:scale-95 cursor-pointer"
           >
             Shop Now
-          </button>
+          </a>
 
           {/* Mobile Menu Toggle */}
           <button 
@@ -163,12 +160,13 @@ export default function Navbar({
                 </div>
               ))}
               <div className="pt-2 flex flex-col gap-3">
-                <button 
-                  onClick={() => { onPromoOpen(); setIsMobileMenuOpen(false); }}
-                  className="w-full bg-[#D45B0C] hover:bg-[#B84E0A] text-white text-center font-medium py-3 rounded-xl transition-all"
+                <a 
+                  href="#shop-categories"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block w-full bg-[#D45B0C] hover:bg-[#B84E0A] text-white text-center font-medium py-3 rounded-xl transition-all"
                 >
-                  Claim Your Savings
-                </button>
+                  Shop Now
+                </a>
                 <button 
                   onClick={() => { onCartOpen(); setIsMobileMenuOpen(false); }}
                   className={`w-full text-center font-medium py-3 rounded-xl transition-all border ${isLightNavbar ? 'bg-white hover:bg-neutral-50 text-neutral-800 border-neutral-300' : 'bg-white/5 hover:bg-white/10 text-white border-white/10'}`}

@@ -17,6 +17,7 @@ interface BestSellersSectionProps {
   onAddToCart: (product: { id: string; name: string; category: string; price: number; originalPrice: number; icon: string }) => void;
   onUpdateQuantity: (id: string, delta: number) => void;
   onNavigateToCategory?: (slug: string) => void;
+  onProductClick: (product: typeof allProducts[0]) => void;
 }
 
 // Pick the top product from each category (one per: fruits, nuts, salads, juices)
@@ -43,6 +44,7 @@ export default function BestSellersSection({
   onAddToCart,
   onUpdateQuantity,
   onNavigateToCategory,
+  onProductClick,
 }: BestSellersSectionProps) {
   return (
     <section id="best-sellers-section" className="relative bg-[#F7F7F7] text-neutral-900 pb-28 z-10">
@@ -127,7 +129,7 @@ export default function BestSellersSection({
                     quantityInCart={quantityInCart}
                     onAddToCart={onAddToCart}
                     onUpdateQuantity={onUpdateQuantity}
-                    onClick={() => onNavigateToCategory?.(product.categorySlug)}
+                    onClick={() => onProductClick(product)}
                   />
                 </motion.div>
               );

@@ -49,6 +49,7 @@ interface CheckoutPageProps {
   onRemoveItem: (id: string) => void;
   onBack: () => void;
   onOrderComplete: () => void;
+  onBrowseProducts: () => void;
 }
 
 type CheckoutStep = 'cart' | 'address' | 'payment' | 'confirmed';
@@ -65,7 +66,7 @@ const validCoupons: CouponInfo[] = [
   { code: 'WELCOME10', discount: 10, label: '10% OFF — Welcome Offer' },
 ];
 
-export default function CheckoutPage({ cartItems, onUpdateQuantity, onRemoveItem, onBack, onOrderComplete }: CheckoutPageProps) {
+export default function CheckoutPage({ cartItems, onUpdateQuantity, onRemoveItem, onBack, onOrderComplete, onBrowseProducts }: CheckoutPageProps) {
   const [step, setStep] = useState<CheckoutStep>('cart');
   
   // Coupon
@@ -102,7 +103,7 @@ export default function CheckoutPage({ cartItems, onUpdateQuantity, onRemoveItem
   const afterCoupon = subtotal - couponDiscount;
   
   const shippingThreshold = 999;
-  const isFreeShipping = afterCoupon >= shippingThreshold;
+  const isFreeShipping = afterCoupon >= shippingThreshold || cartItems.length === 0;
   const shippingCost = isFreeShipping ? 0 : 99;
   
   const totalAmount = afterCoupon + shippingCost;
@@ -135,7 +136,6 @@ export default function CheckoutPage({ cartItems, onUpdateQuantity, onRemoveItem
       setTimeout(() => {
         setStep('confirmed');
         setIsPlacingOrder(false);
-        onOrderComplete();
       }, 2000);
       return;
     }
@@ -180,7 +180,6 @@ export default function CheckoutPage({ cartItems, onUpdateQuantity, onRemoveItem
             const verifyData = await verifyRes.json();
             if (verifyRes.ok && verifyData.success) {
               setStep('confirmed');
-              onOrderComplete();
             } else {
               setPaymentError(verifyData.error || 'Payment signature verification failed');
             }
@@ -314,14 +313,14 @@ export default function CheckoutPage({ cartItems, onUpdateQuantity, onRemoveItem
               <span className="text-5xl block mb-4">🛒</span>
               <h3 className="font-serif text-xl font-bold text-neutral-900 mb-2">Your cart is empty</h3>
               <p className="text-neutral-500 text-sm mb-6">Add some premium organic products to get started.</p>
-              <button onClick={onBack} className="bg-[#D45B0C] hover:bg-[#B84E0A] text-white font-semibold text-sm px-6 py-3 rounded-full cursor-pointer transition-all">
+              <button onClick={onBrowseProducts} className="bg-[#D45B0C] hover:bg-[#B84E0A] text-white font-semibold text-sm px-6 py-3 rounded-full cursor-pointer transition-all">
                 Browse Products
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Left: Cart items */}
-              <div className="lg:col-span-7 space-y-3">
+              <div className="lg:col-span-2 space-y-4">
                 {cartItems.map(item => {
                   const saving = (item.originalPrice - item.price) * item.quantity;
                   return (
@@ -375,10 +374,10 @@ export default function CheckoutPage({ cartItems, onUpdateQuantity, onRemoveItem
                 })}
 
                 {/* Coupon section */}
-                <div className="bg-white rounded-2xl border border-neutral-100 p-4 sm:p-5">
+                <div className="bg-white rounded-2xl border border-neutral-100 p-4 sm:p-5 mt-4">
                   <div className="flex items-center gap-2 mb-3">
                     <Tag className="h-4 w-4 text-[#D45B0C]" />
-                    <span className="text-sm font-semibold text-neutral-900">Have a coupon code?</span>
+                    <span className="text-sm font-semibold text-neutral-900">Enter Coupon Code</span>
                   </div>
                   
                   {appliedCoupon ? (
@@ -413,14 +412,13 @@ export default function CheckoutPage({ cartItems, onUpdateQuantity, onRemoveItem
                         </button>
                       </div>
                       {couponError && <p className="text-xs text-red-500 mt-2">{couponError}</p>}
-                      <p className="text-[11px] text-neutral-400 mt-2">Try: HARVEST40, FRESH20, WELCOME10</p>
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Right: Order Summary */}
-              <div className="lg:col-span-5">
+              <div className="lg:col-span-1">
                 <div className="bg-white rounded-2xl border border-neutral-100 p-5 sm:p-6 sticky top-32">
                   <h3 className="font-serif text-lg font-bold text-neutral-900 mb-5">Order Summary</h3>
 
@@ -485,8 +483,8 @@ export default function CheckoutPage({ cartItems, onUpdateQuantity, onRemoveItem
       {/* STEP 2: DELIVERY ADDRESS */}
       {step === 'address' && (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-7">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
               <h2 className="font-serif text-2xl font-bold text-neutral-900 mb-1">Delivery Address</h2>
               <p className="text-sm text-neutral-500 mb-6">Where should we deliver your harvest?</p>
 
@@ -535,7 +533,7 @@ export default function CheckoutPage({ cartItems, onUpdateQuantity, onRemoveItem
             </div>
 
             {/* Right: Summary sidebar */}
-            <div className="lg:col-span-5">
+            <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl border border-neutral-100 p-5 sm:p-6 sticky top-32">
                 <h3 className="font-serif text-lg font-bold text-neutral-900 mb-4">Order Summary</h3>
 
@@ -596,8 +594,8 @@ export default function CheckoutPage({ cartItems, onUpdateQuantity, onRemoveItem
       {/* STEP 3: PAYMENT */}
       {step === 'payment' && (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-7">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
               <h2 className="font-serif text-2xl font-bold text-neutral-900 mb-1">Payment Method</h2>
               <p className="text-sm text-neutral-500 mb-6">Choose how you'd like to pay</p>
 
@@ -671,7 +669,7 @@ export default function CheckoutPage({ cartItems, onUpdateQuantity, onRemoveItem
             </div>
 
             {/* Right: Final summary */}
-            <div className="lg:col-span-5">
+            <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl border border-neutral-100 p-5 sm:p-6 sticky top-32">
                 <h3 className="font-serif text-lg font-bold text-neutral-900 mb-4">Order Details</h3>
 

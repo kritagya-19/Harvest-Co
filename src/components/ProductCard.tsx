@@ -114,21 +114,21 @@ export default function ProductCard({
 
         {/* Action Button / Qty Selector */}
         {isInCart ? (
-          <div className="flex items-center justify-between bg-neutral-900 text-white rounded-2xl px-3 py-2.5 shadow-md shadow-neutral-900/10 transition-all duration-300">
+          <div className="flex items-center justify-between bg-orange-50 border border-[#D45B0C]/30 text-[#D45B0C] rounded-2xl px-4 py-2.5 shadow-sm transition-all duration-300">
             <button
               onClick={(e) => { e.stopPropagation(); onUpdateQuantity(product.id, -1); }}
-              className="p-1 hover:bg-white/10 rounded-md transition-colors cursor-pointer text-white/80 hover:text-white"
+              className="p-1.5 hover:bg-[#D45B0C]/15 rounded-md transition-colors cursor-pointer text-[#D45B0C]"
             >
-              <Minus className="h-3.5 w-3.5" />
+              <Minus className="h-4 w-4" />
             </button>
-            <span className="text-sm font-bold min-w-[1.5rem] text-center">{quantityInCart}</span>
+            <span className="text-base font-bold min-w-[2rem] text-center text-neutral-900">{quantityInCart}</span>
             <button
               onClick={(e) => { e.stopPropagation(); onUpdateQuantity(product.id, 1); }}
-              className="p-1 hover:bg-white/10 rounded-md transition-colors cursor-pointer text-white/80 hover:text-white"
+              className="p-1.5 hover:bg-[#D45B0C]/15 rounded-md transition-colors cursor-pointer text-[#D45B0C]"
             >
-              <Plus className="h-3.5 w-3.5" />
+              <Plus className="h-4 w-4" />
             </button>
-            <span className="text-[10px] font-bold text-emerald-400 ml-1.5 flex items-center gap-0.5 select-none bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <span className="text-[10px] font-bold text-emerald-700 ml-1.5 flex items-center gap-1 select-none bg-emerald-100 px-2 py-1 rounded-full border border-emerald-200">
               <Check className="h-3 w-3" /> Added
             </span>
           </div>

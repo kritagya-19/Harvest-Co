@@ -45,7 +45,7 @@ export default function CategorySection({ onNavigateToCategory }: CategorySectio
             <img 
               src={freshFruitImg} 
               alt="Fresh Fruits" 
-              className="absolute top-11 left-1/2 -translate-x-1/2 h-44 w-auto object-contain select-none pointer-events-none opacity-100 drop-shadow-[0_15px_15px_rgba(0,0,0,0.35)]"
+              className="absolute top-8 sm:top-11 left-1/2 -translate-x-1/2 h-32 sm:h-40 md:h-44 w-auto max-w-[85%] object-contain select-none pointer-events-none opacity-100 drop-shadow-[0_15px_15px_rgba(0,0,0,0.35)]"
             />
             <div className="text-center z-10 w-full">
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-neutral-900 mb-2">
@@ -72,7 +72,7 @@ export default function CategorySection({ onNavigateToCategory }: CategorySectio
             <img 
               src={premiumNutsImg} 
               alt="Premium Nuts" 
-              className="absolute top-11 left-1/2 -translate-x-1/2 h-44 w-auto object-contain select-none pointer-events-none opacity-100 drop-shadow-[0_15px_15px_rgba(0,0,0,0.35)]"
+              className="absolute top-8 sm:top-11 left-1/2 -translate-x-1/2 h-32 sm:h-40 md:h-44 w-auto max-w-[85%] object-contain select-none pointer-events-none opacity-100 drop-shadow-[0_15px_15px_rgba(0,0,0,0.35)]"
             />
             <div className="text-center z-10 w-full">
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-neutral-900 mb-2">
@@ -99,7 +99,7 @@ export default function CategorySection({ onNavigateToCategory }: CategorySectio
             <img 
               src={fruitSaladImg} 
               alt="Fresh Fruit Salads" 
-              className="absolute top-11 left-1/2 -translate-x-1/2 h-44 w-auto object-contain select-none pointer-events-none opacity-100 drop-shadow-[0_15px_15px_rgba(0,0,0,0.35)]"
+              className="absolute top-8 sm:top-11 left-1/2 -translate-x-1/2 h-32 sm:h-40 md:h-44 w-auto max-w-[85%] object-contain select-none pointer-events-none opacity-100 drop-shadow-[0_15px_15px_rgba(0,0,0,0.35)]"
             />
             <div className="text-center z-10 w-full">
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-neutral-900 mb-2">
@@ -170,7 +170,7 @@ export default function CategorySection({ onNavigateToCategory }: CategorySectio
             <img
               src={juiceIconImg}
               alt="Fresh Juices"
-              className="absolute -right-2 bottom-0 h-72 w-auto object-contain select-none pointer-events-none drop-shadow-[0_15px_20px_rgba(0,0,0,0.2)] opacity-90"
+              className="absolute -right-4 sm:-right-2 bottom-0 h-40 sm:h-56 lg:h-72 w-auto max-w-[50%] sm:max-w-none object-contain object-right-bottom select-none pointer-events-none drop-shadow-[0_15px_20px_rgba(0,0,0,0.2)] opacity-90"
             />
 
             <div className="max-w-xl">
